@@ -34,4 +34,12 @@ def parseXML(xmlfile):
     
     return reviews
 
-parseXML(r'C:/Users/ujzr76l/Desktop/ABSA/ABSA-15_Laptops_Train_Data.xml')
+if __name__ == "__main__":
+    reviews = parseXML(r'C:/Users/ujzr76l/Desktop/ABSA/ABSA-15_Laptops_Train_Data.xml')
+
+    for review in reviews:
+        if review['EA_Pair'] == []:
+            pass
+        else:
+            print(review['sentence'])
+            print(review['EA_Pair'])
