@@ -1,15 +1,16 @@
+import pickle
 import numpy as np
 import spacy
-import pickle
-from Utils.entityopinionparser import parseXML
+from Utils.parser import parseXML
 
 nlp = spacy.load('en_core_web_sm')
+
 
 def dependency_adj_matrix(text):
     document = nlp(text)
     seq_len = len(text.split())
     matrix = np.zeros((seq_len, seq_len)).astype('float32')
-    
+
     for token in document:
         if token.i < seq_len:
             matrix[token.i][token.i] = 1
@@ -17,11 +18,13 @@ def dependency_adj_matrix(text):
             for child in token.children:
                 if child.i < seq_len:
                     matrix[token.i][child.i] = 1
-    
+
     return matrix
+
 
 def process(filename):
     idx2graph = {}
+    fout = open('absarestaurants'+'.tree', 'wb')
 
     reviews = parseXML(filename)
     review_list = []
@@ -38,7 +41,8 @@ def process(filename):
         adj_matrix = dependency_adj_matrix(sentence)
         idx2graph[i] = adj_matrix
 
-    print(idx2graph)
+    pickle.dump(idx2graph, fout)
+
 
 if __name__ == "__main__":
-    process(r'C:/Users/ujzr76l/Desktop/ABSA/ABSA-15_Laptops_Train_Data.xml')
+    process(r'./datasets/absa15-restaurants.xml')
